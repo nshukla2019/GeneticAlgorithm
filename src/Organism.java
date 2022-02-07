@@ -1,11 +1,11 @@
-package src;
+
 
 import java.util.List;
 
 public class Organism {
-    List<Subpart> organism;
+    double fitness_score;
 
-    public Organism(List<Subpart> organism) {
-        this.organism = organism;
+    public Organism(double fitness_score) {
+        this.fitness_score = fitness_score;
     }
 }
