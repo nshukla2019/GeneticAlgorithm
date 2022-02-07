@@ -1,4 +1,4 @@
-
+package src;
 
 enum TYPE {
     TOP,MIDDLE,BOTTOM
