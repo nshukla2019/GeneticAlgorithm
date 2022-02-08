@@ -1,7 +1,7 @@
 package src;
 import java.util.List;
 
-public class Bins extends Subpart {
+public class Bins extends Organism {
     public List<Integer> binOne;
     public List<Integer> binTwo;
     public List<Integer> binThree;

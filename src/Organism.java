@@ -1,6 +1,4 @@
-
-
-import java.util.List;
+package src;
 
 public class Organism {
     double fitness_score;

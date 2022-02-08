@@ -2,7 +2,7 @@ package src;
 
 import java.util.List;
 
-public class Tower extends Subpart{
+public class Tower extends Organism{
     public Piece top;
     public List<Piece> middle_pieces;
     public Piece bottom;

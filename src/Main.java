@@ -4,11 +4,13 @@ import java.io.FileNotFoundException;
 public class Main {
 
     public static void main(String[] args) throws FileNotFoundException {
+        int POPULATION_SIZE = 10;
 
-        FileReader reader = new FileReader();
-        Subpart part = new Subpart(-1);
-        part = reader.readFile("sampleFiles/puzzle2", 2);
-        System.out.println("hi");
+        createZeroGen zeroGen = new createZeroGen();
+
+        //Pool zeroGeneration = new Pool(POPULATION_SIZE, null);
+        //zeroGeneration = zeroGen.readFile("sampleFiles/puzzle2", 2, POPULATION_SIZE);
+
     }
 
 }
