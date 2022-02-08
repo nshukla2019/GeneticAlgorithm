@@ -160,15 +160,15 @@ public class createZeroGen {
         switch(type) {
             case "Door":
             case "DOOR":
-                typeOfPiece = TYPE.BOTTOM;
+                typeOfPiece = TYPE.DOOR;
                 break;
             case "Wall":
             case "WALL":
-                typeOfPiece = TYPE.MIDDLE;
+                typeOfPiece = TYPE.WALL;
                 break;
             case "Lookout":
             case "LOOKOUT":
-                typeOfPiece = TYPE.TOP;
+                typeOfPiece = TYPE.LOOKOUT;
                 break;
         }
         return typeOfPiece;

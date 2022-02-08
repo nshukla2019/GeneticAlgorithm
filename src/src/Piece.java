@@ -1,7 +1,7 @@
 package src;
 
 enum TYPE {
-    TOP,MIDDLE,BOTTOM
+	LOOKOUT,WALL,DOOR
 }
 
 public class Piece {
