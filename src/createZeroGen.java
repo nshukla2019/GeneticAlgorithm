@@ -7,14 +7,15 @@ import java.util.*;
 
 public class createZeroGen {
 
+    public static List<Float> integersProvided = new ArrayList<>();
+    public static List<Piece> listOfPieces = new ArrayList<>();
+
     /**
      * reading in file
      * @param fileName is the path of the file being used as a String
      * @param puzzleType is 1 indicating Puzzle 1, 2 indicating Puzzle 2
      */
     public Pool readFile(String fileName, int puzzleType, int POPULATION_SIZE) throws FileNotFoundException {
-        List<Float> integersProvided = new ArrayList<>();
-        List<Piece> listOfPieces = new ArrayList<>();
 
         switch(puzzleType) {
             case 1:

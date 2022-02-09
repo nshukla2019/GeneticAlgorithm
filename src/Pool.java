@@ -24,5 +24,10 @@ public class Pool {
     	return total_fitness;
     }
 
+    // @Josh made these lists global static variables, so you can access them like this
+    List<Float> listOfFloatsProvided = createZeroGen.integersProvided;
+    List<Piece> listOfPiecesProvided = createZeroGen.listOfPieces;
+
+
 }
 
