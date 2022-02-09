@@ -1,5 +1,6 @@
-package src;
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Bins extends Organism{
@@ -12,15 +13,21 @@ public class Bins extends Organism{
    }
 
  //takes a set of bins and returns its score
-//   double calculateScore(Bins bins) {
-//   	int binOneScore = 1;
-//   	for(int i : bins.binOne) {binOneScore = binOneScore*i;}
-//   	int binTwoScore = 0;
-//   	for(int i : bins.binTwo) {binTwoScore += i;}
-//   	int binScoreThree = Collections.max(bins.binThree) - Collections.min(bins.binThree);
-//   	double score = binOneScore + binTwoScore + binScoreThree;
-//   	return score;
-//   }
+   double calculateScore(Bins binSet) {
+   	float binOneScore = 1;
+   	ArrayList<Float> binOne = binSet.bins.get(0);
+   	for(float i : binOne) {binOneScore = binOneScore*i;}
+   	
+   	float binTwoScore = 0;
+   	ArrayList<Float> binTwo = binSet.bins.get(1);
+   	for(float i : binTwo) {binTwoScore += i;}
+   	
+   	ArrayList<Float> binThree = binSet.bins.get(2);
+   	float binScoreThree = Collections.max(binThree) - Collections.min(binThree);
+   	double score = binOneScore + binTwoScore + binScoreThree;
+   	
+   	return score;
+   }
 
 
 

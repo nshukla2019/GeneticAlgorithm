@@ -1,5 +1,5 @@
 
-package src;
+
 public class Subpart {
 
     public int fitness_score;
