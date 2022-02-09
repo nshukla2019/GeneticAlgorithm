@@ -10,7 +10,7 @@ public class Main {
         createZeroGen zeroGen = new createZeroGen();
 
         Pool zeroGeneration = new Pool(POPULATION_SIZE, null,0);
-        zeroGeneration = zeroGen.readFile("sampleFiles/puzzle1", 1, POPULATION_SIZE);
+        zeroGeneration = zeroGen.readFile("sampleFiles/puzzle2", 2, POPULATION_SIZE);
 
         System.out.println("hi");
 

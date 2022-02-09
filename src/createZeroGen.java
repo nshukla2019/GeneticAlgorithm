@@ -81,25 +81,28 @@ public class createZeroGen {
     }
 
     /**
-     * given a list of pieces create a random tower
+     * given a list of pieces create a random tower with a random height
      * @param listOfPieces is the list of pieces provided by the sample file
      * @return Bins which are populated
      */
     public Tower createRandomTower(List<Piece> listOfPieces) {
+        int numOfPieces = listOfPieces.size();
+        int randomNumOfPieces = (int) ((Math.random() * ((numOfPieces) - 3)) + 3);
+
         List<Piece> middlePieces = new ArrayList<>();
         Tower zeroGenerationTower = new Tower(null, middlePieces, null, -1);
 
-        List<Integer> randomIndexes = getRandomIntegers(listOfPieces);
+        Collections.shuffle(listOfPieces);
 
-        Piece randomPieceForTop = listOfPieces.get(randomIndexes.get(0));
-        Piece randomPieceForBottom = listOfPieces.get(randomIndexes.get(1));
-        Piece randomPieceMiddle1 = listOfPieces.get(randomIndexes.get(2));
-        Piece randomPieceMiddle2 = listOfPieces.get(randomIndexes.get(3));
-        Piece randomPieceMiddle3 = listOfPieces.get(randomIndexes.get(4));
 
-        middlePieces.add(randomPieceMiddle1);
-        middlePieces.add(randomPieceMiddle2);
-        middlePieces.add(randomPieceMiddle3);
+        Piece randomPieceForTop = listOfPieces.get(0);
+        Piece randomPieceForBottom = listOfPieces.get(1);
+
+        for (int i = 2; i < randomNumOfPieces; i++) {
+            Piece randomMiddlePiece = listOfPieces.get(i);
+            middlePieces.add(randomMiddlePiece);
+        }
+
 
         zeroGenerationTower.top = randomPieceForTop;
         zeroGenerationTower.bottom = randomPieceForBottom;
@@ -108,28 +111,6 @@ public class createZeroGen {
         return zeroGenerationTower;
     }
 
-    /**
-     * generates a unique list of indexes given a list of Pieces
-     * @param listOfPieces is a list of Pieces
-     * @return a list of unique indexes
-     */
-    public List<Integer> getRandomIntegers(List<Piece> listOfPieces) {
-        Random rand = new Random();
-
-        int count = 0;
-        List<Integer> randomIndexes = new ArrayList<>();
-
-        // TODO: currently all random towers for 0th generation have a height of 5
-        while (count!=5) {
-            int randomIndex = -1;
-            randomIndex = rand.nextInt(listOfPieces.size());
-            if (!randomIndexes.contains(randomIndex)) {
-                randomIndexes.add(randomIndex);
-                count++;
-            }
-        }
-        return randomIndexes;
-    }
 
     /**
      * given a list of strings that contain piece attributes, create pieces with those attributes
