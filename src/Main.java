@@ -1,4 +1,4 @@
-package src;
+
 import java.io.FileNotFoundException;
 
 public class Main {

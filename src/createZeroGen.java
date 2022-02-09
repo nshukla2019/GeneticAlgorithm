@@ -1,4 +1,4 @@
-package src;
+
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -175,7 +175,7 @@ public class createZeroGen {
     }
 
     public Pool createZerothGeneration(int puzzleType, List<Integer> listOfInteger, List<Piece> listOfPieces, int POPULATION_SIZE) {
-        Pool organisms = new Pool(POPULATION_SIZE, null);
+        Pool organisms = new Pool(POPULATION_SIZE, null,0);
         List<Organism> organismList = new ArrayList<>();
 
         switch (puzzleType) {
