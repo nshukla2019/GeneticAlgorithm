@@ -1,4 +1,4 @@
-
+package src;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,16 +13,16 @@ public class createZeroGen {
      * @param puzzleType is 1 indicating Puzzle 1, 2 indicating Puzzle 2
      */
     public Pool readFile(String fileName, int puzzleType, int POPULATION_SIZE) throws FileNotFoundException {
-        List<Integer> integersProvided = new ArrayList<>();
+        List<Float> integersProvided = new ArrayList<>();
         List<Piece> listOfPieces = new ArrayList<>();
 
         switch(puzzleType) {
             case 1:
                 File intFile = new File(fileName);
-                Scanner intScanner = new Scanner(intFile);
+                Scanner floatScanner = new Scanner(intFile);
 
-                while (intScanner.hasNextLine()) {
-                    integersProvided.add(intScanner.nextInt());
+                while (floatScanner.hasNextLine()) {
+                    integersProvided.add(floatScanner.nextFloat());
                 }
                 return createZerothGeneration(1, integersProvided, listOfPieces, POPULATION_SIZE);
 
@@ -47,27 +47,34 @@ public class createZeroGen {
      * @param listOfIntegers is the list of ints provided by the sample file
      * @return Bins which are populated
      */
-    public Bins createRandomBins(List<Integer> listOfIntegers) {
+    public Bins createRandomBins(List<Float> listOfIntegers) {
         Collections.shuffle(listOfIntegers);
+        List<ArrayList<Float>> bins = new ArrayList<>();
 
-        List<Integer> one = new ArrayList<>();
-        List<Integer> two = new ArrayList<>();
-        List<Integer> three = new ArrayList<>();
-        List<Integer> four = new ArrayList<>();
+        ArrayList<Float> one = new ArrayList<>();
+        ArrayList<Float> two = new ArrayList<>();
+        ArrayList<Float> three = new ArrayList<>();
+        ArrayList<Float> four = new ArrayList<>();
 
-        Bins zeroGenerationBin = new Bins(one, two, three, four, -1);
-        for (Integer i : listOfIntegers) {
-            if (listOfIntegers.indexOf(i) == 0 || listOfIntegers.indexOf(i) <= 9) {
-                zeroGenerationBin.binOne.add(i);
+        bins.add(one);
+        bins.add(two);
+        bins.add(three);
+        bins.add(four);
+
+        Bins zeroGenerationBin = new Bins(bins, -1);
+
+        for (int i =0; i <= listOfIntegers.size(); i++) {
+            if (i <= 9) {
+                one.add(listOfIntegers.get(i));
             }
-            else if (listOfIntegers.indexOf(i) == 10 || listOfIntegers.indexOf(i) <= 19) {
-                zeroGenerationBin.binTwo.add(i);
+            else if (i <= 19) {
+                two.add(listOfIntegers.get(i));
             }
-            else if (listOfIntegers.indexOf(i) == 20 || listOfIntegers.indexOf(i) <= 29) {
-                zeroGenerationBin.binThree.add(i);
+            else if (i <= 29) {
+                three.add(listOfIntegers.get(i));
             }
-            else if (listOfIntegers.indexOf(i) == 30 || listOfIntegers.indexOf(i) <= 39) {
-                zeroGenerationBin.binFour.add(i);
+            else if (i <= 39) {
+                four.add(listOfIntegers.get(i));
             }
         }
         return zeroGenerationBin;
@@ -174,7 +181,7 @@ public class createZeroGen {
         return typeOfPiece;
     }
 
-    public Pool createZerothGeneration(int puzzleType, List<Integer> listOfInteger, List<Piece> listOfPieces, int POPULATION_SIZE) {
+    public Pool createZerothGeneration(int puzzleType, List<Float> listOfInteger, List<Piece> listOfPieces, int POPULATION_SIZE) {
         Pool organisms = new Pool(POPULATION_SIZE, null,0);
         List<Organism> organismList = new ArrayList<>();
 

@@ -1,5 +1,4 @@
-
-
+package src;
 enum TYPE {
 	LOOKOUT,WALL,DOOR
 }
