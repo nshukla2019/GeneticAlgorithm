@@ -1,7 +1,5 @@
-
-
+package src;
 import java.io.FileNotFoundException;
-import java.util.List;
 
 public class Main {
 
@@ -9,9 +7,9 @@ public class Main {
         int POPULATION_SIZE = 10;
 
         createZeroGen zeroGen = new createZeroGen();
+        Pool zeroGeneration = zeroGen.readFile("sampleFiles/puzzle1", 1, POPULATION_SIZE);
 
-        Pool zeroGeneration = new Pool(POPULATION_SIZE, null,0);
-        zeroGeneration = zeroGen.readFile("sampleFiles/puzzle1", 1, POPULATION_SIZE);
+        Pool mutatedGeneration = zeroGeneration.binsMutation(zeroGeneration, 1, 2);
 
         System.out.println("hi");
 
