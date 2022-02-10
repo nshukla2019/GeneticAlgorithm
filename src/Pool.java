@@ -1,8 +1,4 @@
-package src;
 
-import com.sun.tools.corba.se.idl.InterfaceGen;
-
-import java.util.ArrayList;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,8 +17,11 @@ public class Pool {
     }
 
 
-
-    //takes a Pool and returns the sum of the fitness score of the whole population
+    /**
+     * 
+     * @param population
+     * @return the sum of the fitness score of the whole population
+     */
     //I thought total fitness score may be more useful
     double calcTotalFitness(Pool population) {
     	double total_fitness = 0;
@@ -31,22 +30,32 @@ public class Pool {
     	}
     	return total_fitness;
     }
-
-    //Takes a population and returns its generation sorted from highest to lowest fitness score;
+    
+    /**
+     * 
+     * @param population
+     * @return its generation sorted from highest to lowest fitness score;
+     */
     List<Organism> sortByFitness(Pool population) {
     	List<Organism> highToLow = new ArrayList<>();
     	highToLow.addAll(population.generation);
+    	//used a comparator to sort the given pool generation from largest to smallest fitness score
     	Collections.sort(highToLow);
     	return highToLow;
     }
-
-    //Takes in a Population and returns a Population with the kept elite as the new generation
+    
+    /**
+     * 
+     * @param population
+     * @param percentKeep a double from 0-1 representing the percent of population that is elite
+     * @return a Population with the kept elite as the new generation
+     */
     Pool elitism(Pool population, double percentKeep) {
-
+    	//creates a new list from highest to lowest fitness
     	List<Organism> highToLow = new ArrayList<>();
     	highToLow.addAll(sortByFitness(population));
     	int amountToKeep = (int) (Math.ceil(population.POPULATION_SIZE*percentKeep));
-
+    	//takes top percent of population and uses that to create a new Pool
     	List<Organism> elite = new ArrayList<>();
     	for(int i = 0; i < amountToKeep; i++) {
     		elite.add(highToLow.get(i));
@@ -55,21 +64,26 @@ public class Pool {
     	Pool nextGen = new Pool(population.POPULATION_SIZE,elite,0);
     	return nextGen;
     }
-
-    Pool culling(Pool population, double percentYeet) {
-
+    
+    /**
+     * 
+     * @param population
+     * @param percentYeet a double from 0-1 representing the percent of population that will be removed
+     */
+    void culling(Pool population, double percentYeet) {
+    	//orders to current generation high to low and calculates how many to yeet
     	List<Organism> highToLow = new ArrayList<>();
     	highToLow.addAll(sortByFitness(population));
     	double calcYeet = Math.floor(population.POPULATION_SIZE*(1-percentYeet));
     	int amountToKeep = (int) calcYeet;
-
+    	
+    	//adds the number or organisms we want to keep to a new culled list
     	List<Organism> culled = new ArrayList<>();
     	for(int i = 0; i < amountToKeep; i++) {
     		culled.add(highToLow.get(i));
     	}
-
+    	//makes the culled list the generation of the current pool
     	population.generation = culled;
-    	return population;
     }
 
     // @Josh made these lists global static variables, so you can access them like this
@@ -142,6 +156,17 @@ public class Pool {
         }
 
         return generationAfterMutated;
+    }
+    
+    Pool GeneticAlgorithm(Pool population, double perElite, double perCull, long timeRemaining) {
+    	while(timeRemaining > 0) {
+    		//elitism
+    		//culling
+    		//mutation
+    		//crossover
+    		//recursive
+    	}
+    	return population; //place holder
     }
 
 
