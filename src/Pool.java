@@ -219,6 +219,46 @@ public class Pool {
 
         return generationAfterMutated;
     }
+    
+    public Pool poolCrossover(Pool prevGen, Pool nextGeneration, boolean isTower) {
+  		Pool nextGen = nextGeneration;
+  		int numCrossoverParents = -1;
+  		
+  		if(!isTower) {
+  			 numCrossoverParents = 40;}
+  		else {
+  			 numCrossoverParents = 3;}
+  		//repeat for the each organism in the next generation - the ones carried over by elitism
+      	for(int i = 0; i < prevGen.generation.size() - nextGen.generation.size(); i++) {
+
+      		List<Organism> crossoverOrgos = new ArrayList<Organism>(); 
+      		
+      		for(int j = 0; j<numCrossoverParents; j ++) {
+      				crossoverOrgos.add(chooseOrganism(prevGen));
+      		}
+      			nextGeneration.generation.add(chooseOrganism(prevGen).crossover(crossoverOrgos));
+      		}
+      		
+     		 
+      	
+      	return nextGen;
+      }
+      
+      /*
+       * ChooseOrganism takes a pool and a random number
+       */
+      public Organism chooseOrganism(Pool gen) {
+  		Random random = new Random();
+
+      	int scoreLeft = random.nextInt( (int) population_fitness_total + 1);
+      	int orgNum = -1;
+      	
+      	for(int i = 0; scoreLeft >= 0; i++) {
+      		scoreLeft -= gen.generation.get(i).fitness_score;
+      		orgNum = i;
+      	}
+      	return gen.generation.get(orgNum);
+      }
 
     int maxScore = 0;
     int maxScoreGen = 0;

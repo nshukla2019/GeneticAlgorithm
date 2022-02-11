@@ -1,10 +1,12 @@
 
 
 import java.lang.Math;
+import java.util.List;
 
 
-public class Organism implements Comparable<Organism>{
+public abstract class Organism implements Comparable<Organism>{
     double fitness_score;
+    List[] pieces = new List[4];
 
     public Organism(double fitness_score) {
         this.fitness_score = fitness_score;
@@ -27,6 +29,7 @@ public class Organism implements Comparable<Organism>{
     
     
 
+    public abstract Organism crossover(List<Organism> crossoverOrgos);
 
 
 

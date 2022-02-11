@@ -68,6 +68,29 @@ public class Tower extends Organism{
   		}
   		return score;
   	}
+  	
+  	public Tower crossover(List<Tower> organisms, List<Piece> pieces) {
+    	Tower newTower = new Tower(null, new ArrayList<Piece>(), null, -1);
+    	newTower.pieces[1] = organisms.get(1).pieces[1];
+    	
+    	Piece candidateTop = (Piece) organisms.get(0).pieces[0].get(0);
+    	while (newTower.pieces[1].contains(candidateTop)) {
+    		candidateTop = candidateTop.randomPiece(pieces);
+    	}
+    	
+    	Piece candidateBottom = (Piece) organisms.get(0).pieces[0].get(1);
+    	while (newTower.pieces[1].contains(candidateBottom)) {
+    		candidateBottom = candidateBottom.randomPiece(pieces);
+    	}
+    	
+    	return newTower;
+    }
+
+	@Override
+	public Organism crossover(List<Organism> crossoverOrgos) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 
 
