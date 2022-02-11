@@ -1,4 +1,4 @@
-
+package src;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -86,9 +86,9 @@ public class Pool {
     	population.generation = culled;
     }
 
-    // @Josh made these lists global static variables, so you can access them like this
-    List<Float> listOfFloatsProvided = createZeroGen.integersProvided;
-    List<Piece> listOfPiecesProvided = createZeroGen.listOfPieces;
+//    // @Josh made these lists global static variables, so you can access them like this
+//    List<Float> listOfFloatsProvided = createZeroGen.integersProvided;
+//    List<Piece> listOfPiecesProvided = createZeroGen.listOfPieces;
 
 
 
@@ -134,20 +134,15 @@ public class Pool {
 
                         int binOfRandomIndex = Bins.returnBinIndexNumber(randomIndex);
 
-                        // index adjustment
-                        adjustedIndex = Bins.adjustedIndex(binOfRandomIndex, randomIndex);
+                        adjustedIndex = Bins.adjustedIndex(binOfRandomIndex, randomIndex); // index adjustment
 
-                        // get the number at the randomIndex
-                        randomNumber = binsNotBeingUsed.bins.get(binOfRandomIndex).get(adjustedIndex);
+                        randomNumber = binsNotBeingUsed.bins.get(binOfRandomIndex).get(adjustedIndex); // get the number at the randomIndex
 
-                        // save current float
-                        float currentFloat = currentBin.get(currentBinIndex);
+                        float currentFloat = currentBin.get(currentBinIndex); // save current float
 
-                        // set currentBin's index to randomNumber chosen
-                        currentBin.set(currentBinIndex, randomNumber);
+                        currentBin.set(currentBinIndex, randomNumber); // set currentBin's index to randomNumber chosen
 
-                        // set randomNumber's index to current float
-                        currentFourBins.bins.get(binOfRandomIndex).set(adjustedIndex, currentFloat);
+                        currentFourBins.bins.get(binOfRandomIndex).set(adjustedIndex, currentFloat); // set randomNumber's index to current float
 
                     }
                 }
@@ -157,7 +152,58 @@ public class Pool {
 
         return generationAfterMutated;
     }
-    
+
+
+    /**
+     * mutates a generation's organisms on a certain probability
+     * @param generationAfterCulling generation produced after culling
+     * @param numberToInitiateMutation the integer that must be randomly chosen to allow mutation to occur
+     * @param maxOfRandomRange the integer that sets the maximum num to randomly choose rand(0-maxOfRandomRange)
+     * @return the mutated generation
+     */
+    public Pool towersMutation(Pool generationAfterCulling, int numberToInitiateMutation, int maxOfRandomRange) {
+        Pool generationAfterMutated = generationAfterCulling;  // creating new variable to mutate on and return
+        Random ran = new Random();
+
+        for (Organism organism : generationAfterCulling.generation) {
+            Tower currentTower = (Tower) organism; // each organism is 1 tower
+
+            // probability roll for top piece
+            int randomNumForTopPiece = ran.nextInt(maxOfRandomRange);
+            if (randomNumForTopPiece == numberToInitiateMutation) {  // randomNum chosen matches the parameter given
+
+                List<Piece> piecesNotInUse = Piece.piecesNotInUse(currentTower); // get the listOfPieces that are not in the currentTower
+                int randomIndex = ran.nextInt(piecesNotInUse.size());  // randomly choose an index between 0 and the size of listOfPieceNotInUse
+                currentTower.top = piecesNotInUse.get(randomIndex); // replace the top piece with the piece at the randomIndex
+            }
+
+            // probability roll for bottom piece
+            int randomNumForBottomPiece = ran.nextInt(maxOfRandomRange);
+            if (randomNumForBottomPiece == numberToInitiateMutation) {  // randomNum chosen matches the parameter given
+
+                List<Piece> piecesNotInUse = Piece.piecesNotInUse(currentTower); // get the listOfPieces that are not in the currentTower
+                int randomIndex = ran.nextInt(piecesNotInUse.size());  // randomly choose an index between 0 and the size of listOfPieceNotInUse
+                currentTower.bottom = piecesNotInUse.get(randomIndex); // replace the bottom piece with the piece at the randomIndex
+            }
+
+            // probability roll for each middle piece in currentTower
+            for (Piece currentMiddlePiece : currentTower.middle_pieces) {
+                int randomNumForCurrentMiddlePiece = ran.nextInt(maxOfRandomRange);
+                if (randomNumForCurrentMiddlePiece == numberToInitiateMutation) {  // randomNum chosen matches the parameter given
+
+                    List<Piece> piecesNotInUse = Piece.piecesNotInUse(currentTower); // get the listOfPieces that are not in the currentTower
+                    int randomIndex = ran.nextInt(piecesNotInUse.size());  // randomly choose an index between 0 and the size of listOfPieceNotInUse
+                    int indexOfCurrentPiece = currentTower.middle_pieces.indexOf(currentMiddlePiece);
+                    currentTower.middle_pieces.set(indexOfCurrentPiece, piecesNotInUse.get(randomIndex)); // set the currentMiddlePiece piece with the piece at the randomIndex
+                }
+            }
+
+        }
+
+        return generationAfterMutated;
+    }
+
+
     Pool GeneticAlgorithm(Pool population, double perElite, double perCull, long timeRemaining) {
     	while(timeRemaining > 0) {
     		//elitism

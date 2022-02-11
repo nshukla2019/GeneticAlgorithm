@@ -1,4 +1,4 @@
-
+package src;
 import java.util.List;
 
 public class Tower extends Organism{
@@ -24,14 +24,13 @@ public class Tower extends Organism{
   		if(piece.type == type) {return true; }
   		else {return false; }
   	}
-  	
-  	
-  	/**
-  	 * 
-  	 * @param tower
-  	 * @return true if tower is valid
-  	 */
-  	boolean validTower() {
+
+
+	/**
+	 * checks whether the tower is valid or not
+	 * @return true if the tower is valid
+	 */
+	boolean validTower() {
   		//Check if piece types in correct place
   		if(!checkPieceType(this.top,TYPE.LOOKOUT) || !checkPieceType(this.bottom,TYPE.DOOR)) {return false;}
   		for (Piece middle : this.middle_pieces) {
@@ -69,5 +68,7 @@ public class Tower extends Organism{
   		}
   		return score;
   	}
+
+
 
 }
