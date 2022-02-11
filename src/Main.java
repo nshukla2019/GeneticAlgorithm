@@ -1,4 +1,4 @@
-
+package src;
 import java.io.FileNotFoundException;
 import java.time.Clock;
 public class Main {
@@ -8,11 +8,9 @@ public class Main {
         int POPULATION_SIZE = 10;
 
         createZeroGen zeroGen = new createZeroGen();
-        Pool zeroGeneration = zeroGen.readFile("sampleFiles/puzzle2", 2, POPULATION_SIZE);
+        Pool zeroGeneration = zeroGen.readFile("sampleFiles/puzzle1", 1, POPULATION_SIZE);
 
-        Pool mutatedGeneration = zeroGeneration.towersMutation(zeroGeneration, 1, 2);
-
-    	long endTime= clock.millis() + 30000; //duration in ms
+    	long endTime= clock.millis() + 30000; //duration in ms (30000 is also a parameter to be read through the command line)
     	long timeRemaining = endTime - clock.millis();
     	
     	Pool finalGen = zeroGeneration.GeneticAlgorithm(zeroGeneration,2,.2,.3,1,1,timeRemaining,0);

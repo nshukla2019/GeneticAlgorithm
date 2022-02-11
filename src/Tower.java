@@ -1,5 +1,9 @@
+package src;
+import com.sun.tools.corba.se.idl.constExpr.Or;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Tower extends Organism{
     public Piece top;
@@ -69,27 +73,77 @@ public class Tower extends Organism{
   		return score;
   	}
   	
-  	public Tower crossover(List<Tower> organisms, List<Piece> pieces) {
-    	Tower newTower = new Tower(null, new ArrayList<Piece>(), null, -1);
-    	newTower.pieces[1] = organisms.get(1).pieces[1];
-    	
-    	Piece candidateTop = (Piece) organisms.get(0).pieces[0].get(0);
-    	while (newTower.pieces[1].contains(candidateTop)) {
-    		candidateTop = candidateTop.randomPiece(pieces);
-    	}
-    	
-    	Piece candidateBottom = (Piece) organisms.get(0).pieces[0].get(1);
-    	while (newTower.pieces[1].contains(candidateBottom)) {
-    		candidateBottom = candidateBottom.randomPiece(pieces);
-    	}
-    	
-    	return newTower;
-    }
+//  	public Tower crossover(List<Tower> organisms, List<Piece> pieces) {
+//    	Tower newTower = new Tower(null, new ArrayList<Piece>(), null, -1);
+//    	newTower.pieces[1] = organisms.get(1).pieces[1];
+//
+//    	Piece candidateTop = (Piece) organisms.get(0).pieces[0].get(0);
+//    	while (newTower.pieces[1].contains(candidateTop)) {
+//    		candidateTop = candidateTop.randomPiece(pieces);
+//    	}
+//
+//    	Piece candidateBottom = (Piece) organisms.get(0).pieces[0].get(1);
+//    	while (newTower.pieces[1].contains(candidateBottom)) {
+//    		candidateBottom = candidateBottom.randomPiece(pieces);
+//    	}
+//
+//    	return newTower;
+//    }
 
+	/**
+	 * this function creates a new organism from the top 3 elite parents from the last generation by copy the middle portion to the new organism
+	 * then randomly choosing top and bottom pieces if those pieces are already in use in the current organism
+	 * @param topParents are the most elite parents from the last generation
+	 * @return the new "crossovered" organism
+	 */
 	@Override
-	public Organism crossover(List<Organism> crossoverOrgos) {
-		// TODO Auto-generated method stub
-		return null;
+	public Organism crossover(List<Organism> topParents) {
+
+		Tower newTower = new Tower(null, new ArrayList<Piece>(), null, -1); //create new organism that will be the child of the crossover
+
+		List<Tower> topTowerParents = new ArrayList<>();
+
+		for (Organism organism : topParents) {
+			topTowerParents.add((Tower)organism);
+		}
+		Tower firstTowerParent = topTowerParents.get(0);
+		Tower secondTowerParent = topTowerParents.get(1);
+		Tower thirdTowerParent = topTowerParents.get(2);
+
+		// MIDDLE PIECE CROSSOVER
+		newTower.middle_pieces = secondTowerParent.middle_pieces; // set middle of currentTower to secondTowerParent's middle
+
+
+		// TOP PIECE CROSSOVER
+		if (!newTower.middle_pieces.contains(firstTowerParent.top)) { // if first parent has a UNIQUE top piece
+			newTower.top = firstTowerParent.top; // set newTower's top to firstTowerParent's top
+		}
+		else {
+
+			while (newTower.middle_pieces.contains(firstTowerParent.top)) { // if first parent has a top piece that is already in the middle of the new tower
+				Random ran = new Random();
+				int randomIndex = ran.nextInt(Piece.piecesNotInUse(newTower).size());  // choose a randomPiece that is not in use
+
+				newTower.top = Piece.piecesNotInUse(newTower).get(randomIndex);
+			}
+		}
+
+
+		// BOTTOM PIECE CROSSOVER
+		if (!newTower.middle_pieces.contains(thirdTowerParent.bottom)) { // if thirdTowerParent has a UNIQUE bottom piece
+			newTower.bottom = thirdTowerParent.bottom; // set newTower's bottom to thirdTowerParent's bottom
+		}
+		else {
+
+			while (newTower.middle_pieces.contains(thirdTowerParent.bottom)) { // if third parent has a bottom piece that is already in the middle of the new tower
+				Random ran = new Random();
+				int randomIndex = ran.nextInt(Piece.piecesNotInUse(newTower).size());  // choose a randomPiece that is not in use
+
+				newTower.bottom = Piece.piecesNotInUse(newTower).get(randomIndex);
+			}
+		}
+
+		return newTower;
 	}
 
 

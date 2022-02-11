@@ -1,4 +1,4 @@
-
+package src;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -287,7 +287,7 @@ public class Pool {
 			//elitism creates a new pool with the top organisms to start generation
 			Pool nextGen = elitism(population,perElite);
 			
-			//culling removes bottom perent of organisms from pool
+			//culling removes bottom percent of organisms from pool
 			culling(population,perCull);
 			
 			//mutation
@@ -297,8 +297,16 @@ public class Pool {
 			else {
 				Pool mutated = towersMutation(population,perMutate,100); //change last parameter
 			}
+
 			//crossover
-			//stuff from Josh
+//
+//            if (puzzle == 1) { //bins
+//
+//            }
+//            else {
+//
+//            }
+
 			//add culled and kids to next gen
 			GeneticAlgorithm(nextGen,fitnessPower,perElite,perCull,perMutate,puzzle,timeRemaining,genNum+1);
     	}

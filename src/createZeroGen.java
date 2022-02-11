@@ -1,4 +1,4 @@
-
+package src;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
@@ -13,6 +13,7 @@ public class createZeroGen {
      * reading in file
      * @param fileName is the path of the file being used as a String
      * @param puzzleType is 1 indicating Puzzle 1, 2 indicating Puzzle 2
+     * @param POPULATION_SIZE is the size of the population
      */
     public Pool readFile(String fileName, int puzzleType, int POPULATION_SIZE) throws FileNotFoundException {
 
