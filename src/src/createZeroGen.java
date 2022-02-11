@@ -37,7 +37,9 @@ public class createZeroGen {
                 }
 
                 listOfPieces = createPieces(pieceAttributes);
-                return  createZerothGeneration(2, integersProvided, listOfPieces, POPULATION_SIZE);
+                
+                //comenting out to fix errors
+                return null;// createZerothGeneration(2, integersProvided, listOfPieces, POPULATION_SIZE);
         }
         return null;
     }
@@ -173,9 +175,10 @@ public class createZeroGen {
         }
         return typeOfPiece;
     }
-
+    //commenting out to fix errors
+/*
     public Pool createZerothGeneration(int puzzleType, List<Integer> listOfInteger, List<Piece> listOfPieces, int POPULATION_SIZE) {
-        Pool organisms = new Pool(POPULATION_SIZE, null);
+        Pool organisms = new Pool(POPULATION_SIZE, null, false);
         List<Organism> organismList = new ArrayList<>();
 
         switch (puzzleType) {
@@ -194,7 +197,7 @@ public class createZeroGen {
         organisms.generation = organismList;
 
         return organisms;
-    }
+    }*/
 
 
 }
