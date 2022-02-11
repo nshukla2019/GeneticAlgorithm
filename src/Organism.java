@@ -1,4 +1,4 @@
-package src;
+
 
 import java.lang.Math;
 
@@ -21,8 +21,8 @@ public class Organism implements Comparable<Organism>{
      * @param score the calculated score of the organism
      * @param power the power that score is being raised to
      */
-    void setFitnessScore(Organism organism, double score, double power) {
-    	organism.fitness_score = Math.pow(score, power);
+    void setFitnessScore(double score, double power) {
+    	this.fitness_score = Math.pow(score, power);
     }
     
     

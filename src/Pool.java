@@ -1,4 +1,4 @@
-package src;
+
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,20 +15,37 @@ public class Pool {
         this.generation = generation;
         this.population_fitness_total = population_fitness_total;
     }
+    
+    /**
+     * Takes a pool and assigns a score
+     * @param population
+     * @param power to raise score to
+     * @param puzzle 1 is bins, other is tower
+     */
+    void assignFitnessScores(Pool population, double power, int puzzle) {
+    	for(Organism o : population.generation) {
+    		if (puzzle == 1) {
+    			o.setFitnessScore(((Bins) o).calculateScore(),power);
+    		}
+    		else {
+    			o.setFitnessScore(((Tower) o).calculateScore(),power);
+    		}
+    	}
+    }
 
 
     /**
      * 
      * @param population
-     * @return the sum of the fitness score of the whole population
+     * updates total fitness score
      */
     //I thought total fitness score may be more useful
-    double calcTotalFitness(Pool population) {
+    void calcTotalFitness(Pool population) {
     	double total_fitness = 0;
     	for (Organism organism : population.generation) {
     		total_fitness += organism.fitness_score;
     	}
-    	return total_fitness;
+    	population.population_fitness_total = total_fitness;
     }
     
     /**
@@ -203,16 +220,55 @@ public class Pool {
         return generationAfterMutated;
     }
 
-
-    Pool GeneticAlgorithm(Pool population, double perElite, double perCull, long timeRemaining) {
+    int maxScore = 0;
+    int maxScoreGen = 0;
+    
+    Pool GeneticAlgorithm(Pool population, double fitnessPower, double perElite, double perCull, int perMutate, int puzzle, long timeRemaining, int genNum) {  	
     	while(timeRemaining > 0) {
-    		//elitism
-    		//culling
-    		//mutation
-    		//crossover
-    		//recursive
+			//calc scores and assign fitness scored scaled with a power
+			assignFitnessScores(population, fitnessPower, puzzle);
+			calcTotalFitness(population);
+			
+			//check max score
+			
+			if(genNum == 0) {
+				maxScore = 0;
+				maxScoreGen = 0;
+			}
+			else {
+				for(Organism o : population.generation) {
+					if(o.fitness_score > maxScore) {
+						maxScore = (int) o.fitness_score;
+						maxScoreGen = genNum;
+					}
+				}
+			}
+			
+			//elitism creates a new pool with the top organisms to start generation
+			Pool nextGen = elitism(population,perElite);
+			
+			//culling removes bottom perent of organisms from pool
+			culling(population,perCull);
+			
+			//mutation
+			if(puzzle == 1) { //bins
+				Pool mutated = binsMutation(population,perMutate,100); //change last parameter
+			}
+			else {
+				Pool mutated = towersMutation(population,perMutate,100); //change last parameter
+			}
+			//crossover
+			//stuff from Josh
+			//add culled and kids to next gen
+			GeneticAlgorithm(nextGen,fitnessPower,perElite,perCull,perMutate,puzzle,timeRemaining,genNum+1);
     	}
-    	return population; //place holder
+    	System.out.println("Max Score");
+    	System.out.println(maxScore);
+    	System.out.println("Generation of Max Score");
+    	System.out.println(maxScoreGen);
+    	System.out.println("Number of Gens");
+    	System.out.println(genNum);
+    	return population; //then we do it again
     }
 
 
