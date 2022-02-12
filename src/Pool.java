@@ -1,9 +1,10 @@
-package src;
+
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.io.FileNotFoundException;
 import java.time.Clock;
 
 public class Pool {
@@ -286,6 +287,16 @@ public class Pool {
         //return the organism that took the score left below 0
         return gen.generation.get(orgNum);
     }
+    
+    public int numValidTowers(Pool population) {
+    	int numValid = 0;
+    	for (Organism o : population.generation) {
+    		if (((Tower) o).validTower()) {
+    			numValid++;
+    		}
+    	}
+    	return numValid;
+    }
 
 
     
@@ -295,8 +306,27 @@ public class Pool {
 
         long endTime = clock.millis() + 30000;
         long timeRemaining = endTime - clock.millis();
+        Pool lastGen = new Pool(0,null,0);
 
         while(timeRemaining > 0) {
+        	//if tower puzzle, check valid towers
+        	if(isTower) {
+        		if(numValidTowers(population) < 2) {
+        			if(genNum == 0) {
+        				createZeroGen zeroGen = new createZeroGen();
+        		        try { //re-generates a gen0 and starts new algorithm
+							Pool zeroGeneration = zeroGen.readFile("sampleFiles/puzzle1", 1, POPULATION_SIZE);
+							GeneticAlgorithm(zeroGeneration,fitnessPower,perElite,perCull,perMutate,puzzle,timeToRun,0);
+						} catch (FileNotFoundException e) {
+							System.out.println("File not found");
+							e.printStackTrace();
+						}
+        			}
+        			else { //calls function with previous generation
+        				GeneticAlgorithm(lastGen,fitnessPower,perElite,perCull,perMutate,puzzle,timeToRun,genNum-1);
+        			}
+        		}
+        	}
 			//calc scores and assign fitness scored scaled with a power
 			assignFitnessScores(population, fitnessPower, puzzle);
 			calcTotalFitness(population);
@@ -314,7 +344,8 @@ public class Pool {
 					}
 				}
 			}
-			
+			//record current gen as last gen 
+			lastGen = population;
 			//elitism creates a new pool with the top organisms to start generation
 			Pool elitismGen = elitism(population,perElite);
 			

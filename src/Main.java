@@ -1,4 +1,4 @@
-package src;
+
 import java.io.FileNotFoundException;
 import java.time.Clock;
 
@@ -15,7 +15,7 @@ public class Main {
 //        long endTime = clock.millis() + timeToRun;
 //        long timeRemaining = endTime - clock.millis();
 
-		Pool finalGen = finalGen = zeroGeneration.GeneticAlgorithm(zeroGeneration,2,.2,.3,1,1,timeToRun,0);
+		Pool finalGen = zeroGeneration.GeneticAlgorithm(zeroGeneration,2,.2,.3,1,1,timeToRun,0);
 
 
 		System.out.println("first gen total fitness");

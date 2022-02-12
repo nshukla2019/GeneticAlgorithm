@@ -1,5 +1,5 @@
-package src;
-import com.sun.tools.corba.se.idl.constExpr.Or;
+
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +34,7 @@ public class Tower extends Organism{
 	 * checks whether the tower is valid or not
 	 * @return true if the tower is valid
 	 */
-	boolean validTower() {
+	public boolean validTower() {
   		//Check if piece types in correct place
   		if(!checkPieceType(this.top,TYPE.LOOKOUT) || !checkPieceType(this.bottom,TYPE.DOOR)) {return false;}
   		for (Piece middle : this.middle_pieces) {
