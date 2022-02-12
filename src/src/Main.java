@@ -36,7 +36,7 @@ public class Main {
         }
         
         ArrayList O1b4 = new ArrayList<Float>();
-        for(Float i = 21f; i < 31; i ++) {
+        for(Float i = 31f; i < 41; i ++) {
         	O1b4.add(i);
         }
         ArrayList binArray = new ArrayList<ArrayList<Float>>();
@@ -50,22 +50,22 @@ public class Main {
 
         //create bins for second organism
         ArrayList O2b2 = new ArrayList<Float>();
-        for(Float i = 11f; i < 21; i ++) {
+        for(Float i = 21f; i < 31; i ++) {
         	O2b2.add(i);
         }
         
         ArrayList O2b1 = new ArrayList<Float>();
-        for(Float i = 1f; i < 11; i ++) {
+        for(Float i = 31f; i < 41; i ++) {
         	O2b1.add(i);
         }
         
         ArrayList O2b3 = new ArrayList<Float>();
-        for(Float i = 21f; i < 31; i ++) {
+        for(Float i = 1f; i < 11; i ++) {
         	O2b3.add(i);
         }
         
         ArrayList O2b4 = new ArrayList<Float>();
-        for(Float i = 21f; i < 31; i ++) {
+        for(Float i = 11f; i < 21; i ++) {
         	O2b4.add(i);
         }
         
@@ -81,10 +81,19 @@ public class Main {
 
         for(int i = 0; i < 20; i ++) {
         	parents.add(bin1);
+        	
+        }
+        for(int i = 0; i < 20; i ++) {
         	parents.add(bin2);
         }
+        Bins newBin = bin1.crossover(parents, numsForBin);
         
-        bin1.crossover(parents, numsForBin);
+        for(int i = 0; i < 4; i ++) {
+        	for(int j = 0; j < 10; j++) {
+        		numsForBin.remove(newBin.bins.get(i).get(j));
+        	}
+        }
+        
         System.out.println("done");
     }
 

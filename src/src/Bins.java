@@ -25,10 +25,14 @@ public class Bins extends Organism{
     
     public Bins crossover(ArrayList<Bins> organisms, List<Float> numbers) {
     	Bins newOrganism = new Bins(new ArrayList<ArrayList<Float>>(), -1);
-    	
+    	for(i = 0; i < 4; i ++) {
+			newOrganism.bins.add(new ArrayList<Float>());
+		}
     	//Distribute the 40 numbers to bins
     	for(int i = 0; i < organisms.size(); i ++) {
     		Float target = (Float) numbers.get(i);
+    		
+    		
     		Bins currentOrganism = organisms.get(i);
     			if(currentOrganism.bins.get(0).contains(target)) {
     				newOrganism.bins.get(0).add(target);
@@ -59,27 +63,32 @@ public class Bins extends Organism{
     	
     	ArrayList chooseNumToMoveExcessToo = new ArrayList();
 	    
-	    for(int j = 0; j < 3; j++) {
-	    	if(bins.get(j).size() < 10) {
+	    for(int j = 0; j < 4; j++) {
+	    	if(newOrganism.bins.get(j).size() < 10) {
 	    		chooseNumToMoveExcessToo.add(j);
 	    	}
 	    }
     	
 	    //go through the buckets and ensure that there are 10 in each bucket
     	for(int i = 0; i < 4; i++) {
-    		while(newOrganism.bins.get(1).size() > 10) {
+    		while(newOrganism.bins.get(i).size() > 10) {
     			
     			//choose which piece out of bucket i to move
-		    	chooseRandomNumbertToMove = r.nextInt(newOrganism.bins.get(i).size()) + 1;
+		    	chooseRandomNumbertToMove = r.nextInt(newOrganism.bins.get(i).size());
 		    	numberToMove = newOrganism.bins.get(i).get(chooseRandomNumbertToMove);
 		    	newOrganism.bins.get(i).remove(chooseRandomNumbertToMove);
 		    	
 		    	//Choose a bucket to move to
-		    	int bucketToMoveTo = r.nextInt(3);
-		    	chooseNumToMoveExcessToo.get(bucketToMoveTo);
+		    	int bucketToMoveTo = r.nextInt(chooseNumToMoveExcessToo.size());
+		    	int moveToThisBucket = (int)chooseNumToMoveExcessToo.get(bucketToMoveTo);
 		    	
 		    	//move that element to the chosen bucket
-		    	newOrganism.bins.get(bucketToMoveTo).add(numberToMove);
+		    	newOrganism.bins.get(moveToThisBucket).add(numberToMove);
+		    	
+		    	
+		    	if(newOrganism.bins.get(moveToThisBucket).size() == 10) {
+		    		chooseNumToMoveExcessToo.remove(bucketToMoveTo);
+		    	}
 		    
 		    
 		    
