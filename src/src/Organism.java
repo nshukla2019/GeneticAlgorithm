@@ -1,11 +1,12 @@
 package src;
 import java.lang.Math;
+import java.util.ArrayList;
 import java.util.List;
 
 
 public abstract class Organism {
     double fitness_score;
-    List[] pieces = new List[4];
+    List<ArrayList<Float>> bins = new ArrayList<ArrayList<Float>>();
 
     public Organism(double fitness_score) {
         this.fitness_score = fitness_score;

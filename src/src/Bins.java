@@ -12,37 +12,35 @@ public class Bins extends Organism{
 
     private int i;
 
-	public Bins(List<Integer> binOne, List<Integer> binTwo, List<Integer> binThree, List<Integer> binFour, int fitness_score) {
+    public Bins(List<ArrayList<Float>> bins, int fitness_score) {
         super(fitness_score);
-        this.pieces[0] = binOne;
-        this.pieces[1] = binTwo;
-        this.pieces[2] = binThree;
-        this.pieces[3] = binFour;
+        this.bins = bins;
     }
+
     
     /*
      * organisms: all the organisms we are crossing over
      * Numbers: all the numbers given to us by the TA
      */
     
-    public Bins crossover(List<Bins> organisms, List<Integer> numbers) {
-    	Bins newOrganism = new Bins(new ArrayList<Integer>(), new ArrayList<Integer>(), new ArrayList<Integer>(), new ArrayList<Integer>(), -1);
+    public Bins crossover(ArrayList<Bins> organisms, List<Float> numbers) {
+    	Bins newOrganism = new Bins(new ArrayList<ArrayList<Float>>(), -1);
     	
     	//Distribute the 40 numbers to bins
     	for(int i = 0; i < organisms.size(); i ++) {
-    		int target = numbers.get(i);
+    		Float target = (Float) numbers.get(i);
     		Bins currentOrganism = organisms.get(i);
-    			if(currentOrganism.pieces[0].contains(target)) {
-    				newOrganism.pieces[0].add(target);
+    			if(currentOrganism.bins.get(0).contains(target)) {
+    				newOrganism.bins.get(0).add(target);
     			}
-    			else if(currentOrganism.pieces[1].contains(target)) {
-    				newOrganism.pieces[1].add(target);
+    			else if(currentOrganism.bins.get(1).contains(target)) {
+    				newOrganism.bins.get(1).add(target);
     			}
-    			else if(currentOrganism.pieces[2].contains(target)) {
-    				newOrganism.pieces[2].add(target);
+    			else if(currentOrganism.bins.get(2).contains(target)) {
+    				newOrganism.bins.get(2).add(target);
     			}
-    			else if(currentOrganism.pieces[3].contains(target)) {
-    				newOrganism.pieces[3].add(target);
+    			else if(currentOrganism.bins.get(3).contains(target)) {
+    				newOrganism.bins.get(3).add(target);
     			}
     			else {
     				System.out.println("ERROR! Target not found in any bin.");
@@ -56,49 +54,32 @@ public class Bins extends Organism{
     	
     	Random r = new Random();
     	//Start with cutting down bucket 1 to 10
-    	int chooseRandomNumbertToMove = -100;
-    	Integer numberToMove = -1000;
-    	
-    	while(newOrganism.pieces[0].size() > 10) {
-	    	chooseRandomNumbertToMove = r.nextInt(newOrganism.pieces[0].size()) + 1;
-	    	numberToMove = (int) newOrganism.pieces[0].get(chooseRandomNumbertToMove);
-	    	newOrganism.pieces[0].remove(chooseRandomNumbertToMove);
-	    	
-	    	if(newOrganism.pieces[1].size() < 10) {
-	    		newOrganism.pieces[1].add(numberToMove);
-	    	}
-	    	else if(newOrganism.pieces[2].size() < 10) {
-	    		newOrganism.pieces[2].add(numberToMove);
-	    	}
-	    	else if(newOrganism.pieces[3].size() < 10) {
-	    		newOrganism.pieces[3].add(numberToMove);
-	    	}
-    	}
-    	
+    	int chooseRandomNumbertToMove;
+    	Float numberToMove;
     	
     	ArrayList chooseNumToMoveExcessToo = new ArrayList();
 	    
 	    for(int j = 0; j < 3; j++) {
-	    	if(pieces[j].size() <= 10) {
+	    	if(bins.get(j).size() < 10) {
 	    		chooseNumToMoveExcessToo.add(j);
 	    	}
 	    }
     	
 	    //go through the buckets and ensure that there are 10 in each bucket
     	for(int i = 0; i < 4; i++) {
-    		while(newOrganism.pieces[i].size() > 10) {
+    		while(newOrganism.bins.get(1).size() > 10) {
     			
     			//choose which piece out of bucket i to move
-		    	chooseRandomNumbertToMove = r.nextInt(newOrganism.pieces[i].size()) + 1;
-		    	numberToMove = (int) newOrganism.pieces[i].get(chooseRandomNumbertToMove);
-		    	newOrganism.pieces[i].remove(chooseRandomNumbertToMove);
+		    	chooseRandomNumbertToMove = r.nextInt(newOrganism.bins.get(i).size()) + 1;
+		    	numberToMove = newOrganism.bins.get(i).get(chooseRandomNumbertToMove);
+		    	newOrganism.bins.get(i).remove(chooseRandomNumbertToMove);
 		    	
 		    	//Choose a bucket to move to
 		    	int bucketToMoveTo = r.nextInt(3);
 		    	chooseNumToMoveExcessToo.get(bucketToMoveTo);
 		    	
 		    	//move that element to the chosen bucket
-		    	newOrganism.pieces[bucketToMoveTo].add(numberToMove);
+		    	newOrganism.bins.get(bucketToMoveTo).add(numberToMove);
 		    
 		    
 		    
