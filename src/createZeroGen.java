@@ -1,4 +1,4 @@
-
+package src;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
@@ -25,6 +25,7 @@ public class createZeroGen {
                 while (floatScanner.hasNextLine()) {
                     integersProvided.add(floatScanner.nextFloat());
                 }
+                floatScanner.close();
                 return createZerothGeneration(1, integersProvided, listOfPieces, POPULATION_SIZE);
 
             case 2:
@@ -38,6 +39,7 @@ public class createZeroGen {
                 }
 
                 listOfPieces = createPieces(pieceAttributes);
+                pieceScanner.close();
                 return  createZerothGeneration(2, integersProvided, listOfPieces, POPULATION_SIZE);
         }
         return null;
@@ -87,8 +89,8 @@ public class createZeroGen {
      * @return Bins which are populated
      */
     public Tower createRandomTower(List<Piece> listOfPieces) {
-        int numOfPieces = listOfPieces.size();
-        int randomNumOfPieces = (int) ((Math.random() * ((numOfPieces) - 3)) + 3);
+        // int numOfPieces = listOfPieces.size();
+        //int randomNumOfPieces = (int) ((Math.random() * ((numOfPieces) - 3)) + 3);
 
         List<Piece> middlePieces = new ArrayList<>();
         Tower zeroGenerationTower = new Tower(null, middlePieces, null, -1);
@@ -98,12 +100,13 @@ public class createZeroGen {
 
         Piece randomPieceForTop = listOfPieces.get(0);
         Piece randomPieceForBottom = listOfPieces.get(1);
+        Piece randomPieceForMiddle = listOfPieces.get(2);
+        middlePieces.add(randomPieceForMiddle);
 
-        for (int i = 2; i < randomNumOfPieces; i++) {
-            Piece randomMiddlePiece = listOfPieces.get(i);
-            middlePieces.add(randomMiddlePiece);
-        }
-
+        //        for (int i = 2; i < randomNumOfPieces; i++) {
+//            Piece randomMiddlePiece = listOfPieces.get(i);
+//            middlePieces.add(randomMiddlePiece);
+//        }
 
         zeroGenerationTower.top = randomPieceForTop;
         zeroGenerationTower.bottom = randomPieceForBottom;

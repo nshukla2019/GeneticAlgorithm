@@ -1,4 +1,4 @@
-
+package src;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -60,8 +60,10 @@ public class Pool {
     List<Organism> sortByFitness(Pool population) {
     	List<Organism> highToLow = new ArrayList<>();
     	highToLow.addAll(population.generation);
-    	//used a comparator to sort the given pool generation from largest to smallest fitness score
-    	Collections.sort(highToLow);
+
+        //used a comparator to sort the given pool generation from largest to smallest fitness score
+        Collections.sort(highToLow);
+
     	return highToLow;
     }
     
@@ -108,6 +110,24 @@ public class Pool {
     }
 
     /**
+     *
+     * @param population
+     */
+    void cullingNegative(Pool population) {
+        //removes any organisms with negative fitness score
+        List<Organism> orgs = new ArrayList<>();
+
+        for (Organism currentOrg : population.generation) {
+            if (currentOrg.fitness_score > 0) {
+                orgs.add(currentOrg);
+            }
+        }
+
+        //makes the culled list the generation of the current pool
+        population.generation = orgs;
+    }
+
+    /**
      * mutates a generation's organisms on a certain probability
      * @param generationAfterCulling generation produced after culling
      * @param numberToInitiateMutation the integer that must be randomly chosen to allow mutation to occur
@@ -151,6 +171,10 @@ public class Pool {
 
                         adjustedIndex = Bins.adjustedIndex(binOfRandomIndex, randomIndex); // index adjustment
 
+                        if (currentBin.size() < 10) {
+                            System.out.println("LESS THAN 10 NUMS");
+                        }
+
                         randomNumber = binsNotBeingUsed.bins.get(binOfRandomIndex).get(adjustedIndex); // get the number at the randomIndex
 
                         float currentFloat = currentBin.get(currentBinIndex); // save current float
@@ -164,7 +188,11 @@ public class Pool {
             }
 
             boolean check = checkMutation(currentFourBins);
-            //System.out.println(check);
+
+            if (!check) {
+                System.out.println("FALSE");
+            }
+           // System.out.println(check);
         }
 
         return generationAfterMutated;
@@ -249,6 +277,9 @@ public class Pool {
         //repeat for the each organism in the next generation - the ones carried over by elitism
         for(int i = 0; i < currentPopSize; i++) {
 
+            if (i == 0) {
+                System.out.println();
+            }
             //create a list that will be the parents
             List<Organism> crossoverOrgos = new ArrayList<Organism>();
 
@@ -257,7 +288,8 @@ public class Pool {
                 crossoverOrgos.add(chooseOrganism(prevGen));
             }
             //Do the crossover for the chosen parents
-            nextGeneration.generation.add(chooseOrganism(prevGen).crossover(crossoverOrgos));
+            nextGeneration.generation.add(crossoverOrgos.get(0).crossover(crossoverOrgos));
+            //chooseOrganism(prevGen)
         }
 
         return nextGen;
@@ -272,27 +304,32 @@ public class Pool {
         // choose a random score between 1 and the total score
 
         double randomDouble = random.nextDouble();
-        //double popFitnessPlusOne = Double.sum(population_fitness_total, randomDouble);
-        //double score = randomDouble * population_fitness_total;
-        double scoreLeft = randomDouble * population_fitness_total;
+        double scoreLeft = randomDouble * gen.population_fitness_total;
         int orgNum = -1;
 
+        if (scoreLeft < 0) {
+            System.out.println("score");
+        }
         // subtract each score from the random score until you reach 0
         // the score that takes to to 0 will be the parent organism
-        for(int i = 0; scoreLeft >= 0; i++) {
+        for(int i = 0; scoreLeft > 0; i++) {
             scoreLeft -= gen.generation.get(i).fitness_score;
             orgNum = i;
         }
 
+        if (orgNum == -1) {
+            System.out.println("");
+        }
         //return the organism that took the score left below 0
         return gen.generation.get(orgNum);
     }
-    
-    public int numValidTowers(Pool population) {
+
+    public static int numValidTowers(Pool population) {
     	int numValid = 0;
     	for (Organism o : population.generation) {
     		if (((Tower) o).validTower()) {
     			numValid++;
+    			//System.out.println("FOUND TOWER: " + numValid);
     		}
     	}
     	return numValid;
@@ -300,63 +337,32 @@ public class Pool {
 
 
     
-    Pool GeneticAlgorithm(Pool population, double fitnessPower, double perElite, double perCull, int perMutate, int puzzle, long timeToRun, int genNum) {
-        Clock clock = Clock.systemDefaultZone();
+    Pool GeneticAlgorithm(Pool population, double fitnessPower, double perElite, double perCull, int perMutate, int puzzle, long timeToRun, int genNum) throws InterruptedException {
         final boolean isTower = puzzle != 1;  // if puzzle is not 1, isTower is false
 
-        long endTime = clock.millis() + 30000;
-        long timeRemaining = endTime - clock.millis();
-        Pool lastGen = new Pool(0,null,0);
-
-        while(timeRemaining > 0) {
-        	//if tower puzzle, check valid towers
-        	if(isTower) {
-        		if(numValidTowers(population) < 2) {
-        			if(genNum == 0) {
-        				createZeroGen zeroGen = new createZeroGen();
-        		        try { //re-generates a gen0 and starts new algorithm
-							Pool zeroGeneration = zeroGen.readFile("sampleFiles/puzzle1", 1, POPULATION_SIZE);
-							GeneticAlgorithm(zeroGeneration,fitnessPower,perElite,perCull,perMutate,puzzle,timeToRun,0);
-						} catch (FileNotFoundException e) {
-							System.out.println("File not found");
-							e.printStackTrace();
-						}
-        			}
-        			else { //calls function with previous generation
-        				GeneticAlgorithm(lastGen,fitnessPower,perElite,perCull,perMutate,puzzle,timeToRun,genNum-1);
-        			}
-        		}
-        	}
 			//calc scores and assign fitness scored scaled with a power
 			assignFitnessScores(population, fitnessPower, puzzle);
 			calcTotalFitness(population);
-			
-			//check max score
-			if(genNum == 0) {
-				maxScore = 0;
-				maxScoreGen = 0;
-			}
-			else {
-				for(Organism o : population.generation) {
-					if(o.fitness_score > maxScore) {
-						this.maxScore = o.fitness_score;
-                        this.maxScoreGen = genNum;
-					}
-				}
-			}
-			//record current gen as last gen 
-			lastGen = population;
+
 			//elitism creates a new pool with the top organisms to start generation
 			Pool elitismGen = elitism(population,perElite);
-			
-			//culling removes bottom percent of organisms from pool
-			culling(population,perCull);
 
-            //mutation
+			if (!isTower) {
+                //culling removes bottom percent of organisms from pool
+                cullingNegative(population);
+            }
+			else {
+                culling(population, perCull);
+            }
+
+			calcTotalFitness(population);
+
+        //mutation
 			Pool mutatedGeneration;
 
 			if (!isTower) { // not towers
-                mutatedGeneration = binsMutation(population,perMutate,100); //change last parameter
+//                mutatedGeneration = population;
+                mutatedGeneration = binsMutation(population,perMutate,200); //change last parameter
             }
 			else {
                 mutatedGeneration = towersMutation(population,perMutate,100); //change last parameter
@@ -365,21 +371,7 @@ public class Pool {
 			//crossover with the mutated population and the next generation which is elitism
             Pool crossOverOrgs = poolCrossover(mutatedGeneration, elitismGen, isTower);
 
-			// update time remaining
-            timeRemaining = endTime - clock.millis();
-
-			//add culled and kids to next gen
-            GeneticAlgorithm(crossOverOrgs,fitnessPower,perElite,perCull,perMutate,puzzle,timeToRun,genNum+1);
-
-    	}
-
-    	System.out.println("Max Score");
-    	System.out.println(maxScore);
-    	System.out.println("Generation of Max Score");
-    	System.out.println(maxScoreGen);
-    	System.out.println("Number of Gens");
-    	System.out.println(genNum);
-    	return population; //then we do it again
+    	return crossOverOrgs;
     }
 
 

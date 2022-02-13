@@ -1,4 +1,4 @@
-
+package src;
 
 
 import java.util.ArrayList;
@@ -52,6 +52,7 @@ public class Tower extends Organism{
   		for(int i = 0; i < this.middle_pieces.size(); i++) {
   			if(this.middle_pieces.get(i).strength < i) {return false;}
   		}
+
   		return true;
   	}
   	
