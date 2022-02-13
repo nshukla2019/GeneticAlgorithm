@@ -17,16 +17,20 @@ public class Main {
 
         Clock clock = Clock.systemDefaultZone();
         int POPULATION_SIZE = 100;
-        int puzzle = 2;
+        int puzzle = 1;
+        String fileName = "sampleFiles/puzzle1";
 
         createZeroGen zeroGen = new createZeroGen();
-        Pool zeroGeneration = zeroGen.readFile("sampleFiles/puzzle2", puzzle, POPULATION_SIZE);
+        Pool zeroGeneration = zeroGen.readFile(fileName, puzzle, POPULATION_SIZE);
 
-        while (Pool.numValidTowers(zeroGeneration) < 2) {
-            zeroGeneration = zeroGen.readFile("sampleFiles/puzzle2", puzzle, POPULATION_SIZE);
+        if (puzzle == 2) {
+            while (Pool.numValidTowers(zeroGeneration) < 2) {
+                zeroGeneration = zeroGen.readFile(fileName, puzzle, POPULATION_SIZE);
+            }
         }
 
-        long timeToRun = 30000;
+
+        long timeToRun = 10000;
         long endTime = clock.millis() + timeToRun;
         long timeRemaining = endTime - clock.millis();
         double maxScore = 0;
@@ -42,9 +46,13 @@ public class Main {
             }
             nextGen = zeroGeneration.GeneticAlgorithm(nextGen,1,.2,.3,1,puzzle,timeToRun,0);
 
-            while (Pool.numValidTowers(nextGen) < 2) {
-                nextGen = zeroGeneration.GeneticAlgorithm(nextGen,1,.2,.3,1,puzzle,timeToRun,0);
+            if (puzzle == 2) {
+                while (Pool.numValidTowers(nextGen) < 2) {
+                    nextGen = zeroGeneration.GeneticAlgorithm(nextGen,1,.2,.3,1,puzzle,timeToRun,0);
+                }
             }
+
+
 
             timeRemaining = endTime - clock.millis();
 

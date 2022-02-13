@@ -77,7 +77,7 @@ public class Bins extends Organism{
 
         Bins copyOfAllBins = new Bins(copyOfBins, -1);
 
-        copyOfAllBins.bins.set(indexOfBinToCheckAgainst, null); // set bin we are checking against to null
+       // copyOfAllBins.bins.set(indexOfBinToCheckAgainst, null); // set bin we are checking against to null
 
         return copyOfAllBins;
     }

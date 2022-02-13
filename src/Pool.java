@@ -144,7 +144,7 @@ public class Pool {
             Bins currentFourBins = (Bins) organism; // each organism is 4 bins
 
             // for each set of Bins (4 bins)
-            for(int binIndex = 0; binIndex < currentFourBins.bins.size()-1; binIndex++) {
+            for(int binIndex = 0; binIndex < currentFourBins.bins.size(); binIndex++) {
                 ArrayList<Float> currentBin = currentFourBins.bins.get(binIndex);
 
                 // get bins not in the currentBin
@@ -156,47 +156,50 @@ public class Pool {
 
                     if (randomNum == numberToInitiateMutation) {  // randomNum chosen matches the parameter given
 
-                        int randomIndex = -1;
-                        float randomNumber = -1;
-                        int adjustedIndex = -1;
+                        int randomIndex = ran.nextInt(40);  // choose number between 0 and 40
 
-                        randomIndex = ran.nextInt(39);  // randomly choose an index between 0 and 39
+                        int binOfRandomIndex = Bins.returnBinIndexNumber(randomIndex); // get the binIndex of the randomIndex generated
 
-                        // generate random indexes until we get an index that is not in the currentBin
-                        while (!Bins.isRandIndexInCurrentBin(randomIndex, binIndex)) {
-                            randomIndex = ran.nextInt(39);
+                        int adjustedIndex = Bins.adjustedIndex(binOfRandomIndex, randomIndex); // index adjustment (modulo by 10)
+
+                        float randomNumberAtRandomIndex = binsNotBeingUsed.bins.get(binOfRandomIndex).get(adjustedIndex); // save the float at the randomIndex
+
+                        float currentFloat = binsNotBeingUsed.bins.get(binIndex).get(currentBinIndex); // save current float
+
+                        currentFourBins.bins.get(binIndex).set(currentBinIndex, randomNumberAtRandomIndex); // set currentBin's index to randomNumber chosen
+
+                        currentFourBins.bins.get(binOfRandomIndex).set(adjustedIndex, currentFloat); // set current float at randomNumber's index
+
+                        boolean firstCheck = checkMutation(currentFourBins);
+
+                        if (!firstCheck) {
+                            System.out.println("FALSE after MUTATION CALLED");
+                            findIndexOfAccidentallyRemovedInOriginalList(currentFourBins, binsNotBeingUsed);
                         }
 
-                        int binOfRandomIndex = Bins.returnBinIndexNumber(randomIndex);
+                        boolean secondCheck = checkMutation(currentFourBins);
 
-                        adjustedIndex = Bins.adjustedIndex(binOfRandomIndex, randomIndex); // index adjustment
-
-                        if (currentBin.size() < 10) {
-                            System.out.println("LESS THAN 10 NUMS");
+                        if (!secondCheck) {
+                            System.out.println("stillNotGood");
+                            findIndexOfAccidentallyRemovedInOriginalList(currentFourBins, binsNotBeingUsed);
                         }
 
-                        randomNumber = binsNotBeingUsed.bins.get(binOfRandomIndex).get(adjustedIndex); // get the number at the randomIndex
-
-                        float currentFloat = currentBin.get(currentBinIndex); // save current float
-
-                        currentBin.set(currentBinIndex, randomNumber); // set currentBin's index to randomNumber chosen
-
-                        currentFourBins.bins.get(binOfRandomIndex).set(adjustedIndex, currentFloat); // set randomNumber's index to current float
+                        boolean thirdCheck = checkMutation(currentFourBins);
+                        if (!thirdCheck) {
+                            System.out.println("oops");
+                            findIndexOfAccidentallyRemovedInOriginalList(currentFourBins, binsNotBeingUsed);
+                        }
 
                     }
                 }
             }
 
-            boolean check = checkMutation(currentFourBins);
-
-            if (!check) {
-                System.out.println("FALSE");
-            }
-           // System.out.println(check);
         }
 
         return generationAfterMutated;
     }
+
+
 
     // check that all 4 buckets have the same numbers distributed along them
     public boolean checkMutation(Bins setOfFourBuckets) {
@@ -209,8 +212,80 @@ public class Pool {
                 copy.remove(f);
             }
         }
+        if (copy.size() != 0) {
+            for (Float f : copy) {
+                //System.out.println("Number REMOVED: " + f);
+            }
 
+        }
         return copy.size() == 0;
+    }
+
+    // check that all 4 buckets have the same numbers distributed along them
+    public float returnNumAccidentallyRemoved(Bins setOfFourBuckets) {
+        List<Float> copy = new ArrayList<>();
+        float floatAccidentallyRemoved = -1;
+        copy.addAll(createZeroGen.integersProvided);
+
+        for (List<Float> bin : setOfFourBuckets.bins) {
+            for (Float f : bin) {
+                copy.remove(f);
+            }
+        }
+        if (copy.size() != 0) {
+            for (Float f : copy) {
+                floatAccidentallyRemoved = f;
+            }
+
+        }
+
+        return floatAccidentallyRemoved;
+    }
+
+    // check that all 4 buckets have the same numbers distributed along them
+    public float findIndexOfAccidentallyRemovedInOriginalList(Bins currentFourBuckets, Bins binsNotBeingUsed) {
+        float accidentallyRemoved = returnNumAccidentallyRemoved(currentFourBuckets);
+        int indexOfAccidentallyRemoved = -1;
+        int binIndexOfAccidentallyRemoved = -1;
+
+        for (List<Float> bin : binsNotBeingUsed.bins) {
+            for (Float f : bin) {
+                if (f == accidentallyRemoved) {
+                    indexOfAccidentallyRemoved = bin.indexOf(f);
+                    binIndexOfAccidentallyRemoved = binsNotBeingUsed.bins.indexOf(bin);
+                    break;
+                }
+            }
+        }
+
+        if (indexOfAccidentallyRemoved == -1 || binIndexOfAccidentallyRemoved == -1) {
+            System.out.println("did't find indexes of accidentally removed");
+        }
+        float numAtAccidentallyRemoved = currentFourBuckets.bins.get(binIndexOfAccidentallyRemoved).get(indexOfAccidentallyRemoved);
+
+        if (numAtAccidentallyRemoved != accidentallyRemoved) {
+            currentFourBuckets.bins.get(binIndexOfAccidentallyRemoved).set(indexOfAccidentallyRemoved, accidentallyRemoved);
+        }
+        else {
+            // when there are duplicates, but professor said number would be unique?
+            for (List<Float> bin : binsNotBeingUsed.bins) {
+                for (Float f : bin) {
+                    if (f == accidentallyRemoved) {
+                        if (bin.indexOf(f) == indexOfAccidentallyRemoved && binsNotBeingUsed.bins.indexOf(bin) == binIndexOfAccidentallyRemoved) {
+                            continue;
+                        }
+                        else {
+                            indexOfAccidentallyRemoved = bin.indexOf(f);
+                            binIndexOfAccidentallyRemoved = binsNotBeingUsed.bins.indexOf(bin);
+                            break;
+                        }
+                    }
+                }
+            }
+            currentFourBuckets.bins.get(binIndexOfAccidentallyRemoved).set(indexOfAccidentallyRemoved, accidentallyRemoved);
+        }
+
+        return -1;
     }
 
 
@@ -362,7 +437,7 @@ public class Pool {
 
 			if (!isTower) { // not towers
 //                mutatedGeneration = population;
-                mutatedGeneration = binsMutation(population,perMutate,200); //change last parameter
+                mutatedGeneration = binsMutation(population,perMutate,100); //change last parameter
             }
 			else {
                 mutatedGeneration = towersMutation(population,perMutate,100); //change last parameter
