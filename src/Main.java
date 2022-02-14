@@ -1,4 +1,4 @@
-package src;
+
 import java.io.FileNotFoundException;
 import java.time.Clock;
 
@@ -31,17 +31,22 @@ public class Main {
         int numberOfGens = 0;
 
         while (timeRemaining > 0) {
+        	
+        	 Pool prevGen = nextGen;
+        	 nextGen = zeroGeneration.GeneticAlgorithm(nextGen,1,.2,.3,1,puzzle,timeToRun,0);
+        	 
+             if (puzzle == 2) {
+                 while (Pool.numValidTowers(nextGen) < 2) {
+                	 nextGen = zeroGeneration.GeneticAlgorithm(prevGen,1,.2,.3,1,puzzle,timeToRun,numberOfGens-1);  
+                	 nextGen.assignFitnessScores(nextGen, 1, puzzle);
+         			 nextGen.calcTotalFitness(nextGen);
+                 }
+             }
 
-            nextGen = zeroGeneration.GeneticAlgorithm(nextGen,1,.2,.3,1,puzzle,timeToRun,0);
-
-            if (puzzle == 2) {
-                while (Pool.numValidTowers(nextGen) < 2) {
-                    nextGen = zeroGeneration.GeneticAlgorithm(nextGen,1,.2,.3,1,puzzle,timeToRun,0);
-                }
-            }
+             
 
             timeRemaining = endTime - clock.millis();
-            int previousMax =  maxScoreGen;
+            double previousMax =  maxScore;
             for(Organism o : nextGen.generation) {
                 if(o.fitness_score > maxScore) {
                     maxScore = o.fitness_score;
@@ -49,7 +54,7 @@ public class Main {
                 }
             }
 
-            if (maxScoreGen != previousMax) {
+            if (maxScore != previousMax) {
                 System.out.println("Number of Gens: " + numberOfGens);
                 System.out.println("Max Score: " + maxScore);
                 System.out.println("Generation of Max Score: " + maxScoreGen);

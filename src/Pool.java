@@ -1,11 +1,9 @@
-package src;
+
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-import java.io.FileNotFoundException;
-import java.time.Clock;
 
 public class Pool {
     public List<Organism> generation;
@@ -374,6 +372,7 @@ public class Pool {
      * ChooseOrganism takes a pool
      */
     public Organism chooseOrganism(Pool gen) {
+    	
         Random random = new Random();
 
         // choose a random score between 1 and the total score
@@ -384,11 +383,13 @@ public class Pool {
 
         // subtract each score from the random score until you reach 0
         // the score that takes to to 0 will be the parent organism
-        for(int i = 0; scoreLeft >= 0; i++) {
+        for(int i = 0; scoreLeft > 0; i++) {
             scoreLeft -= gen.generation.get(i).fitness_score;
             orgNum = i;
         }
-
+//        if (orgNum < 0) {
+//        	orgNum = 0;
+//        }
 
         //return the organism that took the score left below 0
         return gen.generation.get(orgNum);
