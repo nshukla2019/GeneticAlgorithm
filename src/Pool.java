@@ -173,20 +173,20 @@ public class Pool {
                         boolean firstCheck = checkMutation(currentFourBins);
 
                         if (!firstCheck) {
-                            System.out.println("FALSE after MUTATION CALLED");
+                            //System.out.println("FALSE after MUTATION CALLED");
                             findIndexOfAccidentallyRemovedInOriginalList(currentFourBins, binsNotBeingUsed);
                         }
 
                         boolean secondCheck = checkMutation(currentFourBins);
 
                         if (!secondCheck) {
-                            System.out.println("stillNotGood");
+                           // System.out.println("stillNotGood");
                             findIndexOfAccidentallyRemovedInOriginalList(currentFourBins, binsNotBeingUsed);
                         }
 
                         boolean thirdCheck = checkMutation(currentFourBins);
                         if (!thirdCheck) {
-                            System.out.println("oops");
+                            //System.out.println("oops");
                             findIndexOfAccidentallyRemovedInOriginalList(currentFourBins, binsNotBeingUsed);
                         }
 
@@ -259,7 +259,7 @@ public class Pool {
         }
 
         if (indexOfAccidentallyRemoved == -1 || binIndexOfAccidentallyRemoved == -1) {
-            System.out.println("did't find indexes of accidentally removed");
+            //System.out.println("did't find indexes of accidentally removed");
         }
         float numAtAccidentallyRemoved = currentFourBuckets.bins.get(binIndexOfAccidentallyRemoved).get(indexOfAccidentallyRemoved);
 
@@ -353,7 +353,7 @@ public class Pool {
         for(int i = 0; i < currentPopSize; i++) {
 
             if (i == 0) {
-                System.out.println();
+                //System.out.println();
             }
             //create a list that will be the parents
             List<Organism> crossoverOrgos = new ArrayList<Organism>();
@@ -382,19 +382,14 @@ public class Pool {
         double scoreLeft = randomDouble * gen.population_fitness_total;
         int orgNum = -1;
 
-        if (scoreLeft < 0) {
-            System.out.println("score");
-        }
         // subtract each score from the random score until you reach 0
         // the score that takes to to 0 will be the parent organism
-        for(int i = 0; scoreLeft > 0; i++) {
+        for(int i = 0; scoreLeft >= 0; i++) {
             scoreLeft -= gen.generation.get(i).fitness_score;
             orgNum = i;
         }
 
-        if (orgNum == -1) {
-            System.out.println("");
-        }
+
         //return the organism that took the score left below 0
         return gen.generation.get(orgNum);
     }
@@ -432,21 +427,18 @@ public class Pool {
 
 			calcTotalFitness(population);
 
-        //mutation
+            //mutation
 			Pool mutatedGeneration;
 
 			if (!isTower) { // not towers
-//                mutatedGeneration = population;
-                mutatedGeneration = binsMutation(population,perMutate,100); //change last parameter
+                mutatedGeneration = binsMutation(elitismGen,perMutate,30); //change last parameter
             }
 			else {
-                mutatedGeneration = towersMutation(population,perMutate,100); //change last parameter
+                mutatedGeneration = towersMutation(elitismGen,perMutate,100); //change last parameter
             }
 
-			//crossover with the mutated population and the next generation which is elitism
-            Pool crossOverOrgs = poolCrossover(mutatedGeneration, elitismGen, isTower);
+        return poolCrossover(mutatedGeneration, elitismGen, isTower); //crossover with the mutated population and the next generation which is elitism
 
-    	return crossOverOrgs;
     }
 
 

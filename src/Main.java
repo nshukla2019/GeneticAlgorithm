@@ -1,24 +1,17 @@
 package src;
 import java.io.FileNotFoundException;
 import java.time.Clock;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Main {
 
     public static void main(String[] args) throws FileNotFoundException, InterruptedException {
-//        List<Piece> middle = new ArrayList<Piece> ();
-//        Piece middlePiece = new Piece(TYPE.WALL, 3, 3, 1);
-//
-//        middle.add(middlePiece);
-//		Tower tower = new Tower(new Piece(TYPE.LOOKOUT, 2, 3, 3), middle, new Piece(TYPE.DOOR, 4, 3, 1), -1);
-//
-//        boolean checkTower = tower.validTower();
 
         Clock clock = Clock.systemDefaultZone();
         int POPULATION_SIZE = 100;
-        int puzzle = 1;
-        String fileName = "sampleFiles/puzzle1";
+        int puzzle = Integer.parseInt(args[0]);
+        String fileName = args[1];
+        long timeToRun = Integer.parseInt(args[2]);
+
 
         createZeroGen zeroGen = new createZeroGen();
         Pool zeroGeneration = zeroGen.readFile(fileName, puzzle, POPULATION_SIZE);
@@ -30,7 +23,6 @@ public class Main {
         }
 
 
-        long timeToRun = 10000;
         long endTime = clock.millis() + timeToRun;
         long timeRemaining = endTime - clock.millis();
         double maxScore = 0;
@@ -38,12 +30,8 @@ public class Main {
         Pool nextGen = zeroGeneration;
         int numberOfGens = 0;
 
-
         while (timeRemaining > 0) {
 
-            if (numberOfGens == 1) {
-                System.out.println();
-            }
             nextGen = zeroGeneration.GeneticAlgorithm(nextGen,1,.2,.3,1,puzzle,timeToRun,0);
 
             if (puzzle == 2) {
@@ -52,10 +40,8 @@ public class Main {
                 }
             }
 
-
-
             timeRemaining = endTime - clock.millis();
-
+            int previousMax =  maxScoreGen;
             for(Organism o : nextGen.generation) {
                 if(o.fitness_score > maxScore) {
                     maxScore = o.fitness_score;
@@ -63,18 +49,20 @@ public class Main {
                 }
             }
 
-            System.out.println("Number of Gens: " + numberOfGens);
-            System.out.println("Max Score: " + maxScore);
-            System.out.println("Generation of Max Score: " + maxScoreGen);
+            if (maxScoreGen != previousMax) {
+                System.out.println("Number of Gens: " + numberOfGens);
+                System.out.println("Max Score: " + maxScore);
+                System.out.println("Generation of Max Score: " + maxScoreGen);
+                System.out.println();
+            }
+
             numberOfGens++;
 
-            System.out.println();
         }
 
-//        System.out.println("first gen total fitness");
-//		System.out.println(zeroGeneration.population_fitness_total);
-//		System.out.println("newest gen total fitness");
-//		System.out.println(nextGen.population_fitness_total);
+        System.out.println("Number of Gens: " + numberOfGens);
+        System.out.println("Max Score: " + maxScore);
+        System.out.println("Generation of Max Score: " + maxScoreGen);
 
     }
 
