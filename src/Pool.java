@@ -431,10 +431,10 @@ public class Pool {
 			Pool mutatedGeneration;
 
 			if (!isTower) { // not towers
-                mutatedGeneration = binsMutation(elitismGen,perMutate,30); //change last parameter
+                mutatedGeneration = binsMutation(population,perMutate,30); //change last parameter
             }
 			else {
-                mutatedGeneration = towersMutation(elitismGen,perMutate,100); //change last parameter
+                mutatedGeneration = towersMutation(population,perMutate,100); //change last parameter
             }
 
         return poolCrossover(mutatedGeneration, elitismGen, isTower); //crossover with the mutated population and the next generation which is elitism
